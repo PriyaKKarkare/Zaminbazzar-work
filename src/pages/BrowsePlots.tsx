@@ -47,7 +47,7 @@ const BrowsePlots = ({ selected }) => {
   const [searchParams] = useSearchParams();
   const [plots, setPlots] = useState<Plot[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(selected);
+  const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState('all');
   const [priceRange, setPriceRange] = useState([0, 10000000]);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
@@ -61,6 +61,7 @@ const BrowsePlots = ({ selected }) => {
   const [selectedCities, setSelectedCities] = useState<string[]>([]);
   const [citySearch, setCitySearch] = useState('');
   const [openCityDropdown, setOpenCityDropdown] = useState(false);
+  const [hasInitializedCity, setHasInitializedCity] = useState(false);
 
   const amenitiesList = [
     'Clear Title',
@@ -102,7 +103,15 @@ const BrowsePlots = ({ selected }) => {
     fetchPlots();
     // Check for filters in URL
     const stateParam = searchParams.get('state');
-    const cityParam = searchParams.get('city');
+    const cityParam = searchParams.get("city");
+
+    // 🔥 Apply ONLY ONCE (from Hero)
+    if (cityParam && !hasInitializedCity) {
+      setSelectedCities([cityParam]);
+      // setSearchTerm(cityParam);
+      setHasInitializedCity(true);
+    }
+    // const cityParam = searchParams.get('city');
     console.log("cityparam", cityParam)
     console.log("city param,,,, ", cityParam)
     const typeParam = searchParams.get('type');
@@ -116,7 +125,7 @@ const BrowsePlots = ({ selected }) => {
     if (typeParam) {
       setTypeFilter(typeParam);
     }
-  }, [searchParams]);
+  }, [searchParams, hasInitializedCity]);
 
   const allCities = LOCATIONS;
 
@@ -175,15 +184,20 @@ const BrowsePlots = ({ selected }) => {
   };
 
   const clearFilters = () => {
-    setSearchTerm('');
-    setTypeFilter('all');
+    setSearchTerm("");
+    setTypeFilter("all");
     setPriceRange([0, 10000000]);
     setSelectedAmenities([]);
-    setFacingFilter('all');
-    setRoadWidthFilter('all');
+    setFacingFilter("all");
+    setRoadWidthFilter("all");
     setStateFilter(null);
     setCityFilter(null);
-    navigate('/properties');
+    setSelectedCities([]);
+    setSortBy("recent");
+    setOpenCityDropdown(false);
+  
+    setHasInitializedCity(false);
+    navigate("/properties", { replace: true });
   };
 
   const filteredPlots = plots.filter(plot => {
@@ -548,7 +562,7 @@ const BrowsePlots = ({ selected }) => {
                           //   className="absolute top-56 left-3 z-20 flex items-center gap-1 rounded-full px-3 py-1 bg-gradient-to-r
                           // from-yellow-500 to-orange-500 text-white text-xs font-semibold shadow-md"
                           >
-                            <Crown className="w-4 h-" />
+                            {/* <Crown className="w-4 h-" /> */}
 
                           </div>
                         )}

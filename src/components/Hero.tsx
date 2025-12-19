@@ -14,7 +14,6 @@ const Hero = ({ onSelect }) => {
     if (!q) {
       return;
     }
-
     navigate(`/properties?city=${encodeURIComponent(q)}`,
       {
         state: {
@@ -64,9 +63,10 @@ const Hero = ({ onSelect }) => {
 
               {/* Search Input */}
               <Input
-                placeholder="Enter Keyword for Buy"
+                placeholder="Select Location"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                disabled
                 // onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 className="flex-1 h-12 border-0 focus-visible:ring-0 bg-transparent shadow-none px-4 sm:px-0"
               />
